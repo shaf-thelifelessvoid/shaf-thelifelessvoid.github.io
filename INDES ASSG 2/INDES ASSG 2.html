@@ -1,0 +1,2323 @@
+​​<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>The Rizz Taker: AI Romance Scams</title>
+ <style>
+     /* --- 1. CUSTOM FONT LOADING --- */
+     /* NOTE: Ensure 'fonts/RimouskiSemiBold.ttf' path is correct */
+     @font-face {
+         font-family: 'RimouskiSemiBold';
+         src: url('fonts/RimouskiSemiBold.ttf') format('truetype');
+         font-weight: normal;
+         font-style: normal;
+         font-display: swap;
+     }
+
+
+
+
+
+
+
+
+     /* --- Base Setup --- */
+     * {
+         margin: 0;
+         padding: 0;
+         box-sizing: border-box;
+         cursor: none;
+     }
+
+
+
+
+body {
+    background: #100114;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    font-family: 'RimouskiSemiBold', monospace;
+    margin: 0;
+    padding: 0;
+}
+
+
+#container {
+    width: 960px;
+    height: 540px;
+ 
+    /* Initial Background (Purple Galaxy) */
+    background-image: url('Galaxy BG.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+ 
+    /* Initial Glow */
+    box-shadow: 0 0 30px #fb5ea6,
+                0 0 50px rgba(251, 94, 166, 0.4);
+       
+    transform-origin: center center;
+    transform: scale(1);
+ 
+    position: relative;
+    z-index: 10;
+    overflow: hidden;
+    transition: background-image 1s ease-in-out, box-shadow 1s ease-in-out;
+}
+
+
+
+
+
+
+
+
+     /* --- Red Glow for Maze Level (CRAP: Contrast) --- */
+     #container.red-glow {
+         /* Maze Background is set via JS */
+         box-shadow: 0 0 30px #FF0000,
+                     0 0 50px rgba(255, 0, 0, 0.6);
+     }
+  
+     /* --- Pink Glow (Return to Original) --- */
+     #container.congrats-glow {
+         box-shadow: 0 0 30px #fb5ea6,
+                     0 0 50px rgba(251, 94, 166, 0.4);
+     }
+   
+     /* --- NEW: Blue Glow for Level 2 --- */
+     #container.blue-glow {
+         box-shadow: 0 0 30px #00FFFF,
+                     0 0 50px rgba(0, 255, 255, 0.6);
+     }
+  
+
+
+
+
+
+
+
+
+    @media screen and (max-width: 960px), screen and (max-height: 540px) {
+    #container {
+        transform-origin: top left; /* Ensure scaling happens from top-left */
+        transform: scale(min(calc(100vw / 960), calc(100vh / 540)));
+    }
+}
+
+
+
+
+
+
+
+
+     /* --- Fading Transition --- */
+     .fade-element {
+         transition: opacity 0.5s ease-out, visibility 0.5s;
+     }
+.heart-rain-container {
+    position: fixed; /* CHANGE: fixed instead of absolute */
+    top: 0;
+    left: 0;
+    width: 100vw; /* CHANGE: 100vw instead of 960px */
+    height: 100vh; /* CHANGE: 100vh instead of 540px */
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+}
+  
+     .heart {
+         position: absolute;
+         user-select: none;
+         opacity: 0;
+         animation: rain-of-hearts 8s linear infinite;
+     }
+
+
+
+
+
+
+
+
+     .heart img {
+         width: 40px;
+         height: auto;
+         image-rendering: pixelated;
+         display: block;
+     }
+
+
+
+
+
+
+
+
+    @keyframes rain-of-hearts {
+    0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.8;
+    }
+    90% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(650px) rotate(360deg); /* ← CHANGED TO 650px */
+        opacity: 0;
+    }
+}
+     /* --- Pink Light Stream Overlay --- */
+#stream-overlay {
+    position: absolute; /* Changed from fixed */
+    top: 0;
+    left: 0;
+    width: 960px; /* Changed from 100vw */
+    height: 540px; /* Changed from 100vh */
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 5;
+    animation: stream-down 10s linear infinite;
+}
+
+
+
+
+
+
+
+
+    #stream-overlay::before {
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 540px; /* Changed from 100vh */
+    background: transparent;
+ 
+    box-shadow:
+        20px -1080px 20px 1px rgba(251, 94, 166, 0.5),
+        70px -810px 15px 0px rgba(251, 94, 166, 0.4),
+        150px -540px 25px 2px rgba(251, 94, 166, 0.6),
+        250px -270px 10px 0px rgba(251, 94, 166, 0.3),
+        380px -1080px 22px 1px rgba(251, 94, 166, 0.55),
+        420px -540px 18px 0px rgba(251, 94, 166, 0.45),
+        590px -810px 20px 1px rgba(251, 94, 166, 0.5),
+        700px -1080px 15px 0px rgba(251, 94, 166, 0.4),
+        850px -270px 25px 2px rgba(251, 94, 166, 0.6),
+        950px -972px 10px 0px rgba(251, 94, 166, 0.3);
+ 
+    top: 0;
+    left: 0;
+    width: 960px; /* Changed from 100vw */
+    height: 540px; /* Changed from 100vh */
+}
+
+
+
+
+
+
+
+
+    @keyframes stream-down {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(540px); } /* Changed from 100vh */
+}
+
+
+
+
+
+
+
+
+     /* --- TITLE SCREEN ELEMENTS --- */
+     #title-screen {
+         position: absolute;
+         top: 0;
+         left: 0;
+         width: 100%;
+         height: 100%;
+         z-index: 10;
+     }
+  
+     .positioned-asset {
+         position: absolute;
+         left: 50%;
+         transform: translateX(-50%);
+         image-rendering: pixelated;
+     }
+
+
+
+
+
+
+
+
+     @keyframes blink {
+         0%, 49% { opacity: 1; }
+         50%, 100% { opacity: 0; }
+     }
+     #rizz-taker-header {
+         top: 28%;
+         width: 500px;
+         animation: blink 2s steps(1, end) infinite;
+         content: url("THE RIZZ TAKER_.png");
+     }
+
+
+
+
+
+
+
+
+     #info-textbox {
+         top: 40%;
+         width: 400px;
+         content: url("PLAY OR BE PLAYED_.png");
+     }
+
+
+
+
+
+
+
+
+     /* START BUTTON */
+     #start-button-link {
+         position: absolute;
+         left: 50%;
+         top: 80%;
+         transform: translateX(-50%) scale(1);
+         display: block;
+         filter: drop-shadow(0 0 0 transparent);
+         transition: filter 0.1s ease-out;
+         cursor: pointer;
+         z-index: 11;
+     }
+     #start-button-link img {
+         width: 180px;
+         display: block;
+         image-rendering: pixelated;
+         content: url("Start Button.png");
+     }
+     #start-button-link:hover {
+         filter: drop-shadow(0 0 10px #FFD700) drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+     }
+     #start-button-link:active {
+         filter: drop-shadow(0 0 15px #FFFF00) drop-shadow(0 0 30px #FFC700);
+         transform: translateX(-50%) scale(1);
+         transition: filter 0s;
+     }
+  
+     /* NEW: LEVEL 2 CONTINUE BUTTON (Removed - using congrats-start-button) */
+   
+     /* NEW: Congrats Screen Button */
+     #congrats-start-button {
+         position: relative; /* Relative for centering in flex container */
+         margin-bottom: 20px; /* Space from the bottom edge */
+         width: 180px;
+         image-rendering: pixelated;
+         cursor: pointer;
+         filter: drop-shadow(0 0 0 transparent);
+         transition: filter 0.1s ease-out;
+     }
+     #congrats-start-button:hover {
+         filter: drop-shadow(0 0 10px #FFD700) drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+     }
+     #congrats-start-button:active {
+         filter: drop-shadow(0 0 15px #FFFF00) drop-shadow(0 0 30px #FFC700);
+         transform: scale(1);
+         transition: filter 0s;
+     }
+
+
+
+
+
+
+
+
+     /* --- INTRO SCREEN ELEMENTS --- */
+     #intro-screen {
+         position: absolute;
+         top: 0;
+         left: 0;
+         width: 100%;
+         height: 100%;
+         z-index: 20;
+         opacity: 0;
+         visibility: hidden;
+     }
+
+
+
+
+
+
+
+
+     /* Centering the box on the purple background */
+     #intro-box-wrapper {
+         position: absolute;
+         top: 50%;
+         left: 50%;
+         transform: translate(-50%, -50%);
+         width: 700px;
+         height: 400px;
+     }
+  
+     #intro-textbox {
+         position: absolute;
+         top: 0;
+         left: 0;
+         width: 95%;
+         height: 95%;
+         image-rendering: pixelated;
+         z-index: 21;
+         content: url("INTRODUCTION.png");
+     }
+
+
+
+
+
+
+
+
+     #typed-text-content {
+         position: absolute;
+         top: 95px;
+         left: 60px;
+         width: 580px;
+         height: 300px;
+         z-index: 22;
+      
+         font-family: 'RimouskiSemiBold', monospace;
+         color: #333333;
+         font-size: 14px;
+         line-height: 1.4;
+         overflow: hidden;
+         white-space: pre-wrap;
+     }
+  
+     .typed-line {
+         display: block;
+         opacity: 0;
+         transition: opacity 0.1s;
+     }
+     .typed-line.active {
+         opacity: 1;
+     }
+     .bigger-text {
+         font-size: 18px;
+         font-weight: bold;
+         color: #000000;
+     }
+
+
+
+
+
+
+
+
+     /* YES Button on Intro Screen */
+     #yes-button-link {
+         position: absolute;
+         bottom: 30px;
+         left: 50%;
+         transform: translateX(-50%) scale(1);
+         z-index: 20;
+         display: none;
+         filter: drop-shadow(0 0 0 transparent);
+         transition: filter 0.1s ease-out;
+         cursor: pointer;
+     }
+     #yes-button-link img {
+         width: 125px;
+         display: block;
+         image-rendering: pixelated;
+         content: url("Yes Button.png");
+     }
+     #yes-button-link:hover {
+         filter: drop-shadow(0 0 10px #FFD700) drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+     }
+     #yes-button-link:active {
+         filter: drop-shadow(0 0 15px #FFFF00) drop-shadow(0 0 30px #FFC700);
+         transform: translateX(-50%) scale(1);
+         transition: filter 0s;
+     }
+
+
+
+
+
+
+
+
+     /* --- PROFILE SETUP SCREEN --- */
+     #profile-setup-screen {
+         position: absolute;
+         top: 0;
+         left: 0;
+         width: 100%;
+         height: 100%;
+         z-index: 25;
+         opacity: 0;
+         visibility: hidden;
+         display: flex;
+         flex-direction: column;
+         justify-content: center;
+         align-items: center;
+         background: rgba(0, 0, 0, 0.7);
+         text-align: center;
+     }
+
+
+
+
+
+
+
+
+     /* Setup message is now an image */
+     #setup-message-img {
+         width: 600px;
+         height: auto;
+         image-rendering: pixelated;
+         margin-bottom: 20px;
+         opacity: 0.8;
+         content: url("CREATE YOUR PROFILE_  UPLOAD YOUR PROFILE PICTURE!.png");
+     }
+
+
+
+
+
+
+
+
+     #photo-capture-area {
+         position: relative;
+         width: 300px;
+         height: 300px;
+         border: 5px solid #FF69B4;
+         box-shadow: 0 0 10px #FF69B4;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         margin-bottom: 20px;
+         overflow: hidden;
+         background: #22022b;
+         image-rendering: pixelated;
+     }
+
+
+
+
+
+
+
+
+     #uploaded-photo {
+         width: 100%;
+         height: 100%;
+         object-fit: cover;
+         display: none;
+     }
+
+
+
+
+
+
+
+
+     /* Button Styles (CRAP: Repetition) */
+     .setup-button {
+         /* Ensures Rimouski font is applied */
+         font-family: 'RimouskiSemiBold', monospace;
+         font-size: 18px;
+         padding: 10px 20px;
+         cursor: pointer;
+         image-rendering: pixelated;
+         transition: all 0.1s ease-out;
+         border-width: 3px;
+         border-style: solid;
+         margin-top: 10px;
+          /* NEW: Rounded corners (from previous successful fix) */
+         border-radius: 10px;
+     }
+
+
+
+
+
+
+
+
+     #upload-button {
+         background-color: #FF69B4;
+         color: #100114;
+         border-color: #FFD700;
+         box-shadow: 0 0 5px #ff0077;
+     }
+
+
+
+
+
+
+
+
+     #upload-button:hover {
+         background-color: #ff0077;
+         box-shadow: 0 0 15px #FFD700;
+     }
+  
+     #upload-button:disabled {
+         cursor: not-allowed;
+         background-color: #4a4a4a;
+         border-color: #777;
+         color: #ccc;
+         box-shadow: none;
+     }
+
+
+
+
+
+
+
+
+     #continue-button {
+         display: none;
+         margin-top: 20px;
+         background-color: #00FFFF;
+         color: #100114;
+         border-color: #00FFFF;
+         box-shadow: 0 0 5px #00FFFF;
+     }
+     #continue-button:hover {
+         background-color: #008888;
+         box-shadow: 0 0 15px #00FFFF;
+     }
+     /* Button container for side-by-side layout */
+#profile-setup-screen .setup-buttons-container {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+#profile-setup-screen .setup-button {
+    margin-top: 0; /* Remove individual margin */
+}
+
+
+
+
+
+
+
+
+     /* --- CORNER PROFILE AVATAR --- */
+     #profile-avatar-corner {
+         position: absolute;
+         top: 15px;
+         left: 15px;
+         width: 60px;
+         height: 60px;
+         border-radius: 50%;
+         overflow: hidden;
+         border: 3px solid #FFD700;
+         box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+         background: #22022b;
+         z-index: 50;
+         opacity: 0;
+         visibility: hidden;
+         transition: opacity 0.5s ease-in;
+     }
+
+
+
+
+
+
+
+
+     #profile-avatar-corner img {
+         width: 100%;
+         height: 100%;
+         object-fit: cover;
+     }
+
+
+
+
+
+
+
+
+     /* --- MAZE SCREEN STYLES (LEVEL 1) --- */
+     #maze-screen {
+         position: absolute;
+         top: 0;
+         left: 0;
+         width: 100%;
+         height: 100%;
+         z-index: 30;
+         opacity: 0;
+         visibility: hidden;
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         justify-content: flex-start;
+         padding-top: 20px;
+      
+         box-shadow: inset 0 0 50px 10px rgba(255, 0, 0, 0.5);
+     }
+     /* Cyber dissolve effect for maze transition */
+     #maze-screen.dissolving {
+         filter: blur(10px) contrast(200%) grayscale(100%);
+         transition: filter 0.8s ease-in, opacity 0.8s ease-in;
+     }
+  
+     /* New Title Text Style */
+     #level-title {
+         font-family: 'RimouskiSemiBold', monospace;
+         color: #00FFFF; /* Bright cyan/blue to match the pixel art border */
+         font-size: 30px;
+         text-align: center;
+         text-shadow: 0 0 5px #0000FF, 0 0 10px rgba(0, 0, 255, 0.5); /* Blue glow effect */
+         margin-bottom: 20px; /* Space below the title */
+         z-index: 40; /* Make sure it's above the overlay */
+     }
+  
+     #maze-overlay {
+         position: absolute;
+         top: 55%;
+         left: 50%;
+         transform: translate(-50%, -50%);
+         width: 700px;
+         height: 400px;
+         z-index: 35;
+         pointer-events: none;
+         transition: opacity 0.5s ease-out;
+     }
+  
+  
+     /* Styles for the clickable red flag icons */
+     .flag-icon {
+         position: absolute;
+         image-rendering: pixelated;
+         cursor: pointer;
+         pointer-events: auto;
+         z-index: 40;
+         transition: transform 0.1s ease-out, filter 0.1s ease-out, opacity 0.5s ease-out;
+      
+         /* Ensures icons don't stretch */
+         height: auto !important;
+         object-fit: contain;
+
+
+
+
+
+
+
+
+         filter: drop-shadow(0 0 5px rgba(255, 255, 0, 0.7));
+     }
+
+
+
+
+
+
+
+
+     .flag-icon:hover {
+         transform: scale(1.1);
+         filter: drop-shadow(0 0 8px #FF0000) drop-shadow(0 0 12px rgba(255, 215, 0, 0.9));
+     }
+
+
+
+
+
+
+
+
+     /* --- RED FLAG POPUP STYLES (Shared by Level 1 & Level 2) --- */
+     #flag-popup {
+         position: absolute;
+         top: 50%;
+         left: 50%;
+         transform: translate(-50%, -50%);
+         width: 450px; /* Slightly wider for Level 2 text */
+         max-width: 90%;
+         padding: 20px;
+         background-color: #1a0000;
+         border: 5px solid #FF0000;
+         box-shadow: 0 0 15px #FF0000;
+         color: #FFD700;
+         z-index: 100;
+         text-align: center;
+         display: none;
+         image-rendering: pixelated;
+         font-family: 'RimouskiSemiBold', monospace;
+     }
+   
+     /* NEW: Different border color for Level 2 confirmation */
+     #flag-popup.level2-correct {
+         background-color: #0a1a00; /* Dark green background */
+         border: 5px solid #00FF00; /* Green border */
+         box-shadow: 0 0 15px #00FF00;
+     }
+
+
+
+
+
+
+
+
+     #popup-content h3 {
+         color: #FF0000;
+         font-size: 24px;
+         margin-bottom: 10px;
+         text-shadow: 0 0 5px #FF0000;
+         font-family: 'RimouskiSemiBold', monospace;
+     }
+   
+     #flag-popup.level2-correct #popup-content h3 {
+         color: #00FF00; /* Green title text */
+         text-shadow: 0 0 5px #00FF00;
+     }
+   
+     /* Instruction Popup Overrides */
+     #flag-popup:not(.level2-correct) #popup-content h3 {
+         color: #FFD700; /* Yellow for instruction headers */
+         text-shadow: 0 0 5px #FFD700;
+     }
+
+
+
+
+
+
+
+
+     #popup-content p {
+         font-size: 16px;
+         line-height: 1.3;
+         margin-bottom: 15px;
+         font-family: 'RimouskiSemiBold', monospace;
+         color: #FFD700;
+         white-space: normal;
+     }
+
+
+
+
+
+
+
+
+     #close-popup-button {
+         font-family: 'RimouskiSemiBold', monospace;
+         background-color: #FF0000;
+         color: #fff;
+         border: 2px solid #fff;
+         padding: 5px 15px;
+         cursor: pointer;
+         image-rendering: pixelated;
+         transition: background-color 0.1s;
+     }
+
+
+
+
+
+
+
+
+     #close-popup-button:hover {
+         background-color: #cc0000;
+     }
+   
+     #flag-popup.level2-correct #close-popup-button {
+         background-color: #00FF00;
+     }
+     #flag-popup.level2-correct #close-popup-button:hover {
+         background-color: #00CC00;
+     }
+  
+    .heart-trail {
+    position: fixed;
+    z-index: 99999;
+    pointer-events: none;
+    color: #fb5ea6;
+    font-size: 30px;
+    line-height: 1;
+    font-family: monospace;
+    text-shadow: 0 0 5px #ff69b4;
+    animation: fadeOutAndFloat 1s ease-out forwards;
+}
+     @keyframes fadeOutAndFloat {
+         0% { opacity: 1; transform: translate(0, 0) scale(1); }
+         100% { opacity: 0; transform: translate(0, -20px) scale(0.5); }
+     }
+  
+     /* --- CONGRATULATIONS SCREEN STYLES (UPDATED) --- */
+     #congratulations-screen {
+         position: absolute;
+         top: 0;
+         left: 0;
+         width: 100%;
+         height: 100%;
+         z-index: 40;
+         opacity: 0;
+         visibility: hidden;
+         display: flex;
+         flex-direction: column;
+         justify-content: flex-end; /* PUSHES CONTENT TO THE BOTTOM */
+         align-items: center;
+         text-align: center;
+         padding-bottom: 20px; /* Space from the very bottom edge */
+         background: none;
+         font-family: 'RimouskiSemiBold', monospace;
+     }
+
+
+
+
+
+
+
+
+     /* --- FIREWORKS EFFECT STYLES --- */
+#fireworks-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9998;
+    overflow: visible;
+}
+
+
+
+
+
+
+
+     .firework {
+         position: absolute;
+         width: 6px;
+         height: 6px;
+         border-radius: 50%;
+     }
+
+
+
+
+
+
+
+
+     /* Launch trail - now more prominent */
+     .firework-launch {
+         animation: launch 1.2s ease-out forwards;
+         box-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
+     }
+
+
+
+
+
+
+
+
+     @keyframes launch {
+         0% {
+             transform: translateY(0) scale(1);
+             opacity: 1;
+         }
+         100% {
+             transform: translateY(-350px) scale(1.5);
+             opacity: 0;
+         }
+     }
+
+
+
+
+
+
+
+
+     /* Streak particles - elongated for light trail effect */
+     .firework-particle {
+         position: absolute;
+         width: 4px;
+         height: 30px; /* Elongated for streak effect */
+         border-radius: 50% 50% 0 0;
+         animation: burst-streak 2s ease-out forwards;
+         filter: blur(1px);
+     }
+
+
+
+
+
+
+
+
+     @keyframes burst-streak {
+         0% {
+             transform: translate(0, 0) scale(1) rotate(var(--rotation));
+             opacity: 1;
+         }
+         50% {
+             opacity: 1;
+         }
+         100% {
+             transform: translate(var(--tx), var(--ty)) scale(0.3) rotate(var(--rotation));
+             opacity: 0;
+         }
+     }
+
+
+
+
+
+
+
+
+     /* Enhanced glow effect for streak particles */
+     .firework-particle::before {
+         content: '';
+         position: absolute;
+         width: 20px;
+         height: 60px;
+         border-radius: 50%;
+         background: inherit;
+         filter: blur(8px);
+         top: -15px;
+         left: -8px;
+         opacity: 0.8;
+     }
+
+
+
+
+
+
+
+
+     /* Add trails behind particles */
+     .firework-particle::after {
+         content: '';
+         position: absolute;
+         width: 3px;
+         height: 50px;
+         background: linear-gradient(to bottom, currentColor, transparent);
+         top: 0;
+         left: 0.5px;
+         opacity: 0.6;
+         filter: blur(2px);
+     }
+   
+     /* --- NEW: LEVEL 2 SCREEN STYLES --- */
+     #level2-screen {
+         position: absolute;
+         top: 0;
+         left: 0;
+         width: 100%;
+         height: 100%;
+         z-index: 45;
+         opacity: 0;
+         visibility: hidden;
+         display: flex;
+         flex-direction: column;
+         justify-content: flex-end; /* Move content to the bottom */
+         align-items: center;
+         text-align: center;
+         padding-bottom: 50px;
+         background-size: cover; /* Ensure image fits container */
+         background-position: center;
+         background-repeat: no-repeat;
+         transition: opacity 0.5s ease-out;
+     }
+   
+     #yes-no-buttons {
+         /* UPDATED POSITIONING to be under the profile box */
+         display: flex; /* Kept flex for gap, but hidden by JS initially */
+         gap: 40px;
+         margin-top: 20px;
+         z-index: 50;
+         position: absolute; /* Absolute positioning within #container */
+         bottom: 20px; /* Adjusted to be under the grey box */
+         left: 645px; /* Adjusted to center horizontally under the grey box */
+         transform: translateX(-50%); /* Centers the element on the left position */
+         /* Initial visibility is controlled by JS */
+     }
+   
+     .level2-choice-button {
+         background: none;
+         border: none;
+         padding: 0;
+         cursor: pointer;
+         image-rendering: pixelated;
+         transition: transform 0.1s ease-out, filter 0.1s ease-out;
+         z-index: 55;
+     }
+     .level2-choice-button img {
+         width: 100px;
+         height: auto;
+         display: block;
+         image-rendering: pixelated;
+         filter: drop-shadow(0 0 5px rgba(255, 255, 0, 0.7));
+     }
+     .level2-choice-button:hover img {
+         transform: scale(1.1);
+         filter: drop-shadow(0 0 8px #00FFFF) drop-shadow(0 0 12px rgba(0, 255, 255, 0.9));
+     }
+ 
+/* --- LEVEL 2 COMPLETE SCREEN --- */
+     /* --- LEVEL 2 COMPLETE SCREEN --- */
+     #level2-complete-screen {
+         position: absolute;
+         top: 0;
+         left: 0;
+         width: 100%;
+         height: 100%;
+         z-index: 46;
+         opacity: 0;
+         visibility: hidden;
+         display: none;
+         flex-direction: column;
+         justify-content: center;
+         align-items: center;
+         text-align: center;
+         padding: 20px;
+         background: rgba(0, 0, 0, 0.85);
+         font-family: 'RimouskiSemiBold', monospace;
+         pointer-events: none;
+     }
+    
+     #level2-complete-screen.active {
+         display: flex;
+         pointer-events: auto;
+     }
+    
+     #level2-continue-button:hover {
+         background-color: #008888;
+         box-shadow: 0 0 20px #00FFFF;
+         transform: scale(1.05);
+     }
+    
+     #level2-continue-button:active {
+         transform: scale(0.98);
+     }
+     /* --- TIMER STYLES --- */
+#timer-display {
+    animation: timerPulse 1s ease-in-out infinite;
+}
+
+@keyframes timerPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+#timer-display.warning {
+    color: #FF0000 !important;
+    border-color: #FF0000 !important;
+    animation: timerWarning 0.5s ease-in-out infinite;
+}
+
+@keyframes timerWarning {
+    0%, 100% { 
+        box-shadow: 0 0 10px #FF0000; 
+        transform: scale(1);
+    }
+    50% { 
+        box-shadow: 0 0 30px #FF0000; 
+        transform: scale(1.1);
+    }
+}
+
+/* --- GAME OVER SCREEN --- */
+#game-over-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 60;
+    opacity: 0;
+    visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.95);
+    font-family: 'RimouskiSemiBold', monospace;
+}
+
+#game-over-screen.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+#game-over-title {
+    font-size: 48px;
+    color: #FF0000;
+    text-shadow: 0 0 20px #FF0000;
+    margin-bottom: 20px;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+#game-over-message {
+    font-size: 20px;
+    color: #ff0000;
+    margin-bottom: 30px;
+    max-width: 600px;
+}
+
+#retry-button {
+    font-family: 'RimouskiSemiBold', monospace;
+    font-size: 20px;
+    padding: 15px 40px;
+    background-color: #FF0000;
+    color: #FFFFFF;
+    border: 3px solid #FFD700;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 15px #FF0000;
+    transition: all 0.2s;
+}
+
+#retry-button:hover {
+    background-color: #CC0000;
+    box-shadow: 0 0 25px #FF0000;
+    transform: scale(1.05);
+}
+
+
+
+
+ </style>
+
+
+
+
+
+
+
+
+</head>
+<body>
+ <audio id="correct-sound" src="game-bonus-02-294436.mp3" preload="auto"></audio>
+ <audio id="wrong-sound" src="wrong-answer-126515.mp3" preload="auto"></audio>
+  <audio id="bg-music" src="George_Micheal_-_Careless_Whisper_(mp3.pm).mp3" preload="auto"></audio>
+  <div id="stream-overlay"></div>
+  <div class="heart-rain-container" id="heartRain"></div>
+ <div id="fireworks-container"></div>
+
+
+
+
+
+
+
+
+<div id="container">
+ 
+    <div id="profile-avatar-corner">
+        <img id="avatar-img" src="" alt="Your Profile Avatar">
+    </div>
+ 
+    <div id="title-screen" class="fade-element">
+        <img id="rizz-taker-header" class="positioned-asset" src="THE RIZZ TAKER_.png" alt="THE RIZZ TAKER">
+        <img id="info-textbox" class="positioned-asset" src="PLAY OR BE PLAYED_.png" alt="PLAY OR BE PLAYED">
+        <a href="#" id="start-button-link" onclick="handleStartClick(event)">
+            <img src="Start Button.png" alt="Start Button">
+        </a>
+    </div>
+
+
+
+
+
+
+
+
+    <div id="intro-screen" class="fade-element">
+        <div id="intro-box-wrapper">
+            <img id="intro-textbox" src="INTRODUCTION.png" alt="Introduction Box">
+            <div id="typed-text-content"></div>
+        </div>
+        <a href="#" id="yes-button-link" onclick="handleYesClick(event)">
+            <img src="Yes Button.png" alt="Yes Button">
+        </a>
+    </div>
+ 
+    <div id="profile-setup-screen" class="fade-element">
+        <img id="setup-message-img" src="CREATE YOUR PROFILE_  UPLOAD YOUR PROFILE PICTURE!.png" alt="Create Your Profile Message">
+        <div id="photo-capture-area">
+    <input type="file" id="file-input" accept="image/*" style="display: none;">
+    <img id="uploaded-photo" src="" alt="Uploaded Photo">
+</div>
+<div class="setup-buttons-container">
+    <button class="setup-button" id="upload-button">UPLOAD PHOTO</button>
+    <button class="setup-button" id="continue-button">CONTINUE</button>
+</div>
+    </div>
+ 
+    <div id="maze-screen" class="fade-element">
+        <div id="timer-display" style="position: absolute; top: 20px; right: 20px; font-family: 'RimouskiSemiBold', monospace; font-size: 24px; color: #FFD700; text-shadow: 0 0 10px #FF0000; z-index: 50; background: rgba(0, 0, 0, 0.7); padding: 10px 20px; border: 3px solid #FF0000; border-radius: 10px;">
+       Time: <span id="timer-countdown">60</span>s
+   </div>
+   <div id="maze-overlay">
+    
+       <!-- ORIGINAL FLAGS (Keep these IDs) -->
+       <img src="Dog_.png"
+            class="flag-icon"
+            id="flag1-icon"
+            data-flag-id="flag1"
+            style="top: 280px; left: 100px; width: 60px;">
+    
+       <img src="Video Game_.png"
+            class="flag-icon"
+            id="flag2-icon"
+            data-flag-id="flag2"
+            style="top: 150px; left: 520px; width: 50px;">
+    
+       <img src="Coin.png"
+            class="flag-icon"
+            id="flag3-icon"
+            data-flag-id="flag3"
+            style="top: 50px; left: 350px; width: 50px;">
+
+
+       <!-- DECOY/DISTRACTION FLAGS -->
+       <img src="Bomb.png"
+            class="flag-icon"
+            data-flag-id="deadend"
+            style="top: 320px; left: 350px; width: 50px;">
+         
+       <img src="Orange cat.png"
+            class="flag-icon"
+            data-flag-id="deadend"
+            style="top: 380px; left: 50px; width: 50px;">
+    
+       <img src="Red Heart.png"
+            class="flag-icon"
+            data-flag-id="deadend"
+            style="top: 280px; left: 470px; width: 40px;">
+    
+       <img src="Love Potion_.png"
+            class="flag-icon"
+            data-flag-id="deadend"
+            style="top: 150px; left: 350px; width: 50px;">
+    
+       <img src="Bomb.png"
+            class="flag-icon"
+            data-flag-id="deadend"
+            style="top: 350px; left: 670px; width: 45px;">
+         
+       <img src="Love Potion_.png"
+            class="flag-icon"
+            data-flag-id="deadend"
+            style="top: 50px; left: 450px; width: 50px;">
+
+
+       <img src="Crescent Moon.png"
+            class="flag-icon"
+            data-flag-id="deadend"
+            style="top: 300px; left: 570px; width: 50px;">
+
+
+       <img src="Video Game_.png"
+            class="flag-icon"
+            data-flag-id="deadend"
+            style="top: 250px; left: 300px; width: 50px;">
+         
+       <img src="Red Heart.png"
+            class="flag-icon"
+            data-flag-id="deadend"
+            style="top: 125px; left: 650px; width: 40px;">
+        
+       <!-- DUPLICATE FLAGS (Different IDs to avoid conflicts) -->
+       <img src="Dog_.png"
+            class="flag-icon"
+            data-flag-id="flag1"
+            style="top: 350px; left: 250px; width: 60px;">
+    
+       <img src="Love Potion_.png"
+            class="flag-icon"
+            data-flag-id="deadend"
+            style="top: 100px; left: 250px; width: 50px;">
+         
+       <img src="Orange cat.png"
+            class="flag-icon"
+            data-flag-id="deadend"
+            style="top: 25px; left: 50px; width: 50px;">
+      
+       <img src="Bomb.png"
+            class="flag-icon"
+            data-flag-id="deadend"
+            style="top: 100px; left: 100px; width: 45px;">
+      
+       <img src="Red Heart.png"
+            class="flag-icon"
+            data-flag-id="deadend"
+            style="top: 150px; left: 10px; width: 40px;">
+      
+       <img src="Video Game_.png"
+            class="flag-icon"
+            data-flag-id="deadend"
+            style="top: 200px; left: 150px; width: 50px;">
+      
+       <img src="Bomb.png"
+            class="flag-icon"
+            data-flag-id="deadend"
+            style="top: 175px; left: 670px; width: 45px;">
+       
+   </div>
+</div>
+  
+     <div id="congratulations-screen" class="fade-element">
+         <img id="congrats-start-button" src="Start Button.png" alt="Start Level 2" onclick="transitionToLevel2()">
+     </div>
+
+     <div id="level2-complete-screen" class="fade-element">
+         <h2 id="congrats-title" style="color: #FFD700; font-size: 36px; margin-bottom: 20px; text-shadow: 0 0 10px #FFD700;">Congratulations!</h2>
+         <p id="congrats-message" style="color: #FFFFFF; font-size: 18px; margin-bottom: 30px; max-width: 600px;">You successfully navigated the maze and completed Level 2! You've made a match!</p>
+        
+         <a href="INDES ASSG 2.1.html" style="text-decoration: none;">
+             <button id="level2-continue-button" style="font-family: 'RimouskiSemiBold', monospace; font-size: 20px; padding: 15px 30px; background-color: #00FFFF; color: #100114; border: 3px solid #FFD700; border-radius: 10px; cursor: pointer; box-shadow: 0 0 10px #00FFFF; transition: all 0.2s;">
+                 Continue Your Journey
+             </button>
+         </a>
+     </div>
+   
+     <div id="level2-screen" class="fade-element">
+         <div id="yes-no-buttons">
+             <button class="level2-choice-button" onclick="handleLevel2Choice(true)">
+                 <img src="Yes Button_.png" alt="Yes Button - Is AI">
+             </button>
+             <button class="level2-choice-button" onclick="handleLevel2Choice(false)">
+                 <img src="No Button.png" alt="No Button - Not AI">
+             </button>
+  
+    </div> <!-- Close yes-no-buttons -->
+     </div> <!-- Close level2-screen -->
+    <!-- NEW GAME OVER SCREEN -->
+<div id="game-over-screen">
+    <h2 id="game-over-title">TIME'S UP!</h2>
+    <p id="game-over-message">You ran out of time! The scammer got away. Want to try again and catch those red flags?</p>
+    <button id="retry-button" onclick="retryLevel1()">TRY AGAIN</button>
+</div>
+
+<div id="flag-popup">
+        <div id="popup-content">
+            <h3>[Flag Title]</h3>
+            <p>[Flag Description]</p>
+        </div>
+        <button id="close-popup-button" onclick="closePopup()">ACKNOWLEDGE</button>
+     </div>
+
+
+
+
+</div> <!-- Close container -->
+<script>
+ // Audio elements
+ const correctSound = document.getElementById('correct-sound');
+ const wrongSound = document.getElementById('wrong-sound');
+ const bgMusic = document.getElementById('bg-music'); // NEW MUSIC ELEMENT
+  // NEW: Define the background URLs
+ const GALAXY_BACKGROUND_SRC = 'url(\'Galaxy BG.jpg\')';
+ const CELEBRATION_BACKGROUND_SRC = 'url(\'Celebration Page.png\')';
+ const LEVEL2_ALEX_SRC = 'url(\'Level 2 - BG_.png\')'; // Alex's Profile
+ const LEVEL2_JAKE_SRC = 'url(\'Level 2.2 Bg_.png\')'; // Jake's Profile
+  const congratulationsScreen = document.getElementById('congratulations-screen');
+ const level2Screen = document.getElementById('level2-screen');
+ const container = document.getElementById('container');
+ const mazeScreen = document.getElementById('maze-screen');
+
+
+
+
+
+
+
+
+ // --- Raining Hearts Generation & Cursor Trail Logic ---
+ const heartRainContainer = document.getElementById('heartRain');
+ const HEART_IMAGE_SRC = 'Heart Background_.png';
+
+
+
+
+
+
+
+
+ function createHeart() {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+ 
+    const heartImg = document.createElement('img');
+    heartImg.src = HEART_IMAGE_SRC;
+    heartImg.alt = 'Pixel Heart';
+    heart.appendChild(heartImg);
+ 
+    // CHANGE THIS LINE - Use document.body.clientWidth instead of window.innerWidth
+    const left = Math.random() * document.body.clientWidth;
+    heart.style.left = left + 'px';
+ 
+    const duration = Math.random() * 6 + 4;
+    const delay = Math.random() * 4;
+ 
+    heart.style.animationDuration = duration + 's';
+    heart.style.animationDelay = delay + 's';
+ 
+    heartRainContainer.appendChild(heart);
+ 
+    setTimeout(() => {
+        heart.remove();
+    }, duration * 1000);
+}
+
+
+
+
+
+
+
+
+ function startRainingHearts() {
+     if (HEART_IMAGE_SRC.includes('.png')) {
+         for (let i = 0; i < 50; i++) {
+             createHeart();
+         }
+         setInterval(createHeart, 300);
+     }
+ }
+ function startRainingHearts() {
+    if (HEART_IMAGE_SRC.includes('Heart Background_.png')) {
+        for (let i = 0; i < 50; i++) {
+            createHeart();
+        }
+        setInterval(createHeart, 300);
+    }
+}
+
+startRainingHearts(); // ← ADD THIS LINE!
+  document.addEventListener('mousemove', function(e) {
+    const heart = document.createElement('span');
+    heart.classList.add('heart-trail');
+    heart.innerHTML = '♥';
+    heart.style.left = e.clientX + 'px';
+    heart.style.top = e.clientY + 'px';
+    document.body.appendChild(heart);
+    setTimeout(() => { heart.remove(); }, 1000);
+});
+
+
+
+
+
+
+
+
+ // --- Typing & Transition Logic (Title, Intro, Setup) ---
+ const textLines = [
+     { text: "Welcome to The Rizz Taker!", isBigger: true },
+     { text: "" },
+     { text: "You're looking for love in a world of swipes and", isBigger: false },
+     { text: "digital romance....but, you'll have to navigate", isBigger: false },
+     { text: "dangerous AI dating profiles that put you at", isBigger: false },
+     { text: "risk of being scammed of your money!", isBigger: false },
+     { text: "" },
+     { text: "Let's learn how to spot fake AI dating profiles!", isBigger: false },
+     { text: "" },
+     { text: "Ready to play?", isBigger: true }
+ ];
+
+
+
+
+
+
+
+
+ let charIndex = 0;
+ let lineIndex = 0;
+ let typingSpeed = 30;
+ let textContainer = document.getElementById('typed-text-content');
+ let yesButton = document.getElementById('yes-button-link');
+  function typeLine() {
+     if (lineIndex < textLines.length) {
+         const lineData = textLines[lineIndex];
+         const lineSpan = document.createElement('span');
+         lineSpan.classList.add('typed-line');
+         if (lineData.isBigger) {
+             lineSpan.classList.add('bigger-text');
+         }
+         textContainer.appendChild(lineSpan);
+      
+         if (lineData.text === "") {
+             lineSpan.innerHTML = "&nbsp;";
+             lineIndex++;
+             setTimeout(typeLine, typingSpeed * 10);
+             return;
+         }
+
+
+
+
+
+
+
+
+         const lineContent = lineData.text;
+         lineSpan.classList.add('active');
+      
+         const typeChar = () => {
+             if (charIndex < lineContent.length) {
+                 lineSpan.textContent += lineContent.charAt(charIndex);
+                 charIndex++;
+                 setTimeout(typeChar, typingSpeed);
+             } else {
+                 charIndex = 0;
+                 lineIndex++;
+                 if (lineIndex === textLines.length) {
+                      setTimeout(revealYesButton, 1500);
+                 } else {
+                      setTimeout(typeLine, typingSpeed * 10);
+                 }
+             }
+         };
+         typeChar();
+     }
+ }
+  function revealYesButton() {
+     yesButton.style.display = 'block';
+ }
+
+
+
+
+     function handleStartClick(event) {
+     event.preventDefault();
+
+
+     const titleScreen = document.getElementById('title-screen');
+     const introScreen = document.getElementById('intro-screen');
+  
+     titleScreen.style.opacity = '0';
+     titleScreen.style.visibility = 'hidden';
+
+
+     // --- START MUSIC AND LOOP ---
+     bgMusic.loop = true;
+     bgMusic.play().catch(e => console.error("Music playback failed:", e));
+     bgMusic.onended = function() {
+         if (bgMusic.loop) {
+             bgMusic.currentTime = 0;
+             bgMusic.play();
+         }
+     };
+     // --- END MUSIC LOGIC ---
+
+
+     setTimeout(() => {
+         introScreen.style.opacity = '1';
+         introScreen.style.visibility = 'visible';
+         typeLine();
+     }, 550);
+ }
+  function handleYesClick(event) {
+     event.preventDefault();
+
+
+
+
+
+
+
+
+     const introScreen = document.getElementById('intro-screen');
+     const setupScreen = document.getElementById('profile-setup-screen');
+
+
+
+
+
+
+
+
+     introScreen.style.opacity = '0';
+     introScreen.style.visibility = 'hidden';
+  
+     setTimeout(() => {
+         setupScreen.style.opacity = '1';
+         setupScreen.style.visibility = 'visible';
+     }, 550);
+ }
+
+
+
+
+
+
+
+
+ // Image Upload/Setup Logic
+ const fileInput = document.getElementById('file-input');
+ const uploadButton = document.getElementById('upload-button');
+ const uploadedPhoto = document.getElementById('uploaded-photo');
+ const continueButton = document.getElementById('continue-button');
+ const avatarCorner = document.getElementById('profile-avatar-corner');
+ const avatarImg = document.getElementById('avatar-img');
+
+
+
+
+
+
+
+
+ uploadButton.addEventListener('click', () => {
+     fileInput.click();
+ });
+
+
+
+
+
+
+
+
+ fileInput.addEventListener('change', (e) => {
+     const file = e.target.files[0];
+     if (file) {
+         const reader = new FileReader();
+         reader.onload = (event) => {
+             const imageUrl = event.target.result;
+          
+             uploadedPhoto.src = imageUrl;
+             uploadedPhoto.style.display = 'block';
+             avatarImg.src = imageUrl;
+          
+             continueButton.style.display = 'block';
+             avatarCorner.style.opacity = '1';
+             avatarCorner.style.visibility = 'visible';
+         };
+         reader.readAsDataURL(file);
+     }
+ });
+
+
+
+
+
+
+
+
+ // --- LEVEL 1 (MAZE) LOGIC ---
+
+
+
+
+
+
+
+
+ const RED_FLAGS = {
+     flag1: {
+         title: "RED FLAG 1: VISUAL FLAWS",
+         description: "Look for anatomical errors (e.g., wrong number of fingers, blurry or misshapen teeth).<br><br>The skin looks almost too perfect and often has a waxy, overly smooth, or hyper-symmetric appearance.<br><br>Ensure to check backgrounds for garbled or nonsensical text on signs or clothing."
+     },
+     flag2: {
+         title: "RED FLAG 2: SUSPICIOUS IMAGE ORIGIN",
+         description: "Do a reverse image search on google by uploading the photo on Google Images to see if the image is used on stock photo sites or unrelated websites."
+     },
+     flag3: {
+         title: "RED FLAG 3: VAGUE OR GENERIC DETAILS",
+         description: "The profile uses highly polished, formal or generic language.<br><br>Details about their job, location or past are vague."
+     },
+     deadend: {
+         title: "WRONG PATH!",
+         description: "That item isn't a Red Flag! You're wasting time. Be careful, distractions keep you from the truth."
+     }
+ };
+
+
+
+
+
+
+
+
+ let flagsFound = new Set();
+ const popup = document.getElementById('flag-popup');
+ const popupTitle = popup.querySelector('h3');
+ const popupDescription = popup.querySelector('p');
+ const flagIcons = document.querySelectorAll('.flag-icon');
+ // --- TIMER VARIABLES ---
+let timerInterval = null;
+let timeRemaining = 60;
+const timerDisplay = document.getElementById('timer-countdown');
+const timerContainer = document.getElementById('timer-display');
+
+
+
+
+
+
+
+
+ function showPopup(flagId, isLevel2 = false, isCorrect = false, isInstruction = false) {
+     const flagData = RED_FLAGS[flagId];
+     if (!flagData && !isLevel2 && !isInstruction) return;
+   
+     popup.classList.remove('level2-correct'); // Reset class
+   
+     if (isInstruction) {
+         popupTitle.textContent = "INSTRUCTIONS";
+         popupDescription.innerHTML = flagId.replace(/\(break\)/g, '<br><br>');
+         popup.style.display = 'block';
+         flagIcons.forEach(icon => icon.style.pointerEvents = 'none');
+         return;
+     }
+
+
+
+
+
+
+
+
+     if (isLevel2) {
+         // Handle Level 2 custom popups (Feedback)
+         popupTitle.textContent = isCorrect ? "CORRECT!" : "INCORRECT!";
+         popupDescription.innerHTML = flagId.replace(/\(break\)/g, '<br><br>');
+         if (isCorrect) {
+             popup.classList.add('level2-correct');
+         }
+     } else {
+         // Handle Level 1 popups
+         popupTitle.textContent = flagData.title;
+         popupDescription.innerHTML = flagData.description;
+     }
+
+
+
+
+
+
+
+
+     popup.style.display = 'block';
+     flagIcons.forEach(icon => icon.style.pointerEvents = 'none');
+
+
+
+
+
+
+
+
+     // --- GAME LOGIC FOR SOUNDS AND SCORING (Level 1 only) ---
+     if (!isLevel2) {
+         if (flagId.startsWith('flag') && !flagsFound.has(flagId)) {
+             correctSound.currentTime = 0;
+             correctSound.play();
+
+
+
+
+
+
+
+
+             flagsFound.add(flagId);
+             document.getElementById(`${flagId}-icon`).style.filter = 'drop-shadow(0 0 10px #00FF00)';
+           
+         } else if (flagId === 'deadend') {
+             wrongSound.currentTime = 0;
+             wrongSound.play();
+          
+         } else if (flagId.startsWith('flag') && flagsFound.has(flagId)) {
+             correctSound.currentTime = 0;
+             correctSound.play();
+         }
+     }
+ }
+
+
+
+
+
+
+
+// --- TIMER FUNCTIONS ---
+function startTimer() {
+    timeRemaining = 60;
+    timerDisplay.textContent = timeRemaining;
+    timerContainer.classList.remove('warning');
+    
+    if (timerInterval) {
+        clearInterval(timerInterval);
+    }
+    
+    timerInterval = setInterval(() => {
+        timeRemaining--;
+        timerDisplay.textContent = timeRemaining;
+        
+        // Warning effect when time is running out
+        if (timeRemaining <= 10 && timeRemaining > 0) {
+            timerContainer.classList.add('warning');
+        }
+        
+        // Time's up!
+        if (timeRemaining <= 0) {
+            stopTimer();
+            showGameOver();
+        }
+        
+        // Auto-win if all flags found
+        if (flagsFound.size === 3) {
+            stopTimer();
+        }
+    }, 1000);
+}
+
+function stopTimer() {
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+}
+
+function showGameOver() {
+    const gameOverScreen = document.getElementById('game-over-screen');
+    gameOverScreen.classList.add('active');
+    
+    // Disable flag clicking
+    document.querySelectorAll('.flag-icon').forEach(icon => {
+        icon.style.pointerEvents = 'none';
+    });
+}
+
+function retryLevel1() {
+    const gameOverScreen = document.getElementById('game-over-screen');
+    gameOverScreen.classList.remove('active');
+    
+    // Reset flags
+    flagsFound.clear();
+    
+    // Reset flag icon styles
+    document.querySelectorAll('.flag-icon').forEach(icon => {
+        icon.style.filter = 'drop-shadow(0 0 5px rgba(255, 255, 0, 0.7))';
+        icon.style.pointerEvents = 'auto';
+    });
+    
+    // Restart timer
+    startTimer();
+}
+ // --- FIREWORKS LOGIC ---
+ const fireworksContainer = document.getElementById('fireworks-container');
+ let fireworksInterval;
+ const fireworkColors = [
+     '#00FFFF', '#667eea', '#764ba2', '#FF69B4', '#fb5ea6', '#FFD700', '#FFC700'
+ ];
+ function createFirework() {
+    const containerRect = container.getBoundingClientRect();
+    const startX = containerRect.left + (Math.random() * containerRect.width);
+    const startY = containerRect.bottom;
+    const targetY = containerRect.top + (Math.random() * (containerRect.height * 0.3));
+    const color = fireworkColors[Math.floor(Math.random() * fireworkColors.length)];
+  
+     const launch = document.createElement('div');
+     launch.className = 'firework firework-launch';
+     launch.style.left = startX + 'px';
+     launch.style.top = startY + 'px';
+     launch.style.backgroundColor = color;
+     launch.style.boxShadow = `0 0 10px ${color}`;
+     fireworksContainer.appendChild(launch);
+  
+     setTimeout(() => {
+         createBurst(startX, targetY, color);
+         launch.remove();
+     }, 1000);
+ }
+  function createBurst(x, y, color) {
+     const particleCount = 40 + Math.random() * 30;
+      for (let i = 0; i < particleCount; i++) {
+         const particle = document.createElement('div');
+         particle.className = 'firework-particle';
+      
+         const angle = (Math.PI * 2 * i) / particleCount;
+         const velocity = 80 + Math.random() * 140;
+         const tx = Math.cos(angle) * velocity;
+         const ty = Math.sin(angle) * velocity + Math.random() * 60;
+      
+         const rotation = (angle * 180 / Math.PI) + 90;
+      
+         particle.style.left = x + 'px';
+         particle.style.top = y + 'px';
+         particle.style.backgroundColor = color;
+         particle.style.color = color;
+         particle.style.boxShadow = `0 0 15px ${color}, 0 0 30px ${color}`;
+         particle.style.setProperty('--tx', tx + 'px');
+         particle.style.setProperty('--ty', ty + 'px');
+         particle.style.setProperty('--rotation', rotation + 'deg');
+      
+         fireworksContainer.appendChild(particle);
+      
+         setTimeout(() => {
+             particle.remove();
+         }, 2000);
+     }
+ }
+  function startFireworks() {
+     createFirework();
+     setTimeout(createFirework, 200);
+     setTimeout(createFirework, 400);
+     setTimeout(createFirework, 600);
+     setTimeout(createFirework, 800);
+  
+     fireworksInterval = setInterval(() => {
+         createFirework();
+         if (Math.random() > 0.6) {
+             setTimeout(createFirework, 300);
+         }
+     }, 800 + Math.random() * 700);
+ }
+  function stopFireworks() {
+     if (fireworksInterval) {
+         clearInterval(fireworksInterval);
+         fireworksInterval = null;
+     }
+     fireworksContainer.innerHTML = '';
+ }
+ // --- LEVEL 2 PROFILE LOGIC ---
+ let currentProfile = 'alex'; // 'alex' or 'jake'
+ // -1: Maze finished, ready for congrats; 0: Congrats screen; 1: Alex Profile, waiting for instruction close;
+ // 2: Alex choice made, feedback pending; 3: Jake Profile, waiting for choice; 4: Jake choice made, feedback pending; 5: Alex Profile, waiting for choice; 6: Level 2 end
+ let level2State = 0;
+ let level2Score = 0;
+
+
+
+
+
+
+
+
+ const PROFILE_DATA = {
+     alex: {
+         src: LEVEL2_ALEX_SRC,
+         correct: {
+             title: "EXPOSED: ALEX'S RED FLAGS",
+             message: "Correct! The profile uses highly polished, formal or generic language. Details about Alex's job, location or past are vague. (break) After a reverse image search on google is done, the image can be seen used on stock photo sites or unrelated websites."
+         },
+         incorrect: {
+             title: "MISSED RED FLAGS: ALEX",
+             message: "Red Flag 1: Suspicious Image Origin<br>Do a reverse image search on google by uploading the photo on Google Images to see if the image is used on stock photo sites or unrelated websites. (break) Red Flag 2: Vague or Generic Details<br>The profile uses highly polished, formal or generic language. Details about their job, location or past are vague."
+         }
+     },
+     jake: {
+         src: LEVEL2_JAKE_SRC,
+         correct: {
+             title: "EXPOSED: JAKE'S RED FLAGS",
+             message: "Correct! The skin looks almost too perfect and often has a waxy, overly smooth, or hyper-symmetric appearance. (break) The profile uses highly polished, formal or generic language. Details about their job, location or past are vague."
+         },
+         incorrect: {
+             title: "MISSED RED FLAGS: JAKE",
+             message: "Red Flag 1: Visual Flaws<br>Look for anatomical errors (e.g., wrong number of fingers, blurry or misshapen teeth). The skin looks almost too perfect and often has a waxy, overly smooth, or hyper-symmetric appearance. Ensure to check backgrounds for garbled or nonsensical text on signs or clothing. (break) Red Flag 2: Vague or Generic Details<br>The profile uses highly polished, formal or generic language. Details about their job, location or past are vague."
+         }
+     }
+ };
+ function showLevel2Profile(profileId, isStart = false) {
+     currentProfile = profileId;
+     const profile = PROFILE_DATA[profileId];
+     const yesNoButtons = document.getElementById('yes-no-buttons');
+   
+     // 1. Set the background image
+     container.style.backgroundImage = profile.src;
+     container.style.backgroundSize = 'cover';
+     container.style.backgroundPosition = 'center';
+   
+     // 2. Apply blue glow
+     container.classList.remove('congrats-glow');
+     container.classList.add('blue-glow');
+   
+     // 3. Show the screen
+     level2Screen.style.opacity = '1';
+     level2Screen.style.visibility = 'visible';
+   
+     // Hide buttons initially (requested by user)
+     yesNoButtons.style.display = 'none';
+   
+     // 4. Update avatar corner glow to match blue theme
+     avatarCorner.style.borderColor = '#00FFFF';
+     avatarCorner.style.boxShadow = '0 0 10px rgba(0, 255, 255, 0.7)';
+
+
+
+
+
+
+
+
+     if (isStart) {
+         // State 1: Show initial instruction popup (Requested by user to gate buttons)
+         showPopup("Level 2: Deepfake Deception.(break)Identify if this profile is AI.(break)Click YES if AI, NO if not.", false, false, true);
+         level2State = 1; // Waiting for instruction close
+     } else {
+         // State 3: Jake's profile loaded, waiting for user choice
+         yesNoButtons.style.display = 'flex'; // Show buttons for choice on Jake's profile
+         level2State = 3;
+     }
+ }
+
+function handleLevel2Choice(isYes) {
+    // isYes = true (Clicked YES) -> Profile is AI (Correct for both Alex and Jake)
+
+    const isCorrect = isYes;
+    const profileData = PROFILE_DATA[currentProfile];
+    const result = isCorrect ? profileData.correct : profileData.incorrect;
+  
+    if (isCorrect) {
+        correctSound.currentTime = 0;
+        correctSound.play();
+        level2Score++;
+        
+        // Hide buttons and proceed to next profile
+        document.getElementById('yes-no-buttons').style.display = 'none';
+        level2State = (currentProfile === 'alex') ? 2 : 4;
+    } else {
+        wrongSound.currentTime = 0;
+        wrongSound.play();
+        
+        // DON'T hide buttons - let them try again
+        // DON'T change state - stay on same profile
+    }
+   
+    // Show feedback popup
+    showPopup(result.message, true, isCorrect);
+}
+ // --- TRANSITION FUNCTIONS ---
+ function transitionToCongratulationsScreen() {
+     const mazeOverlay = document.getElementById('maze-overlay');
+  
+     // STEP 1: Apply cyber dissolve effect
+     mazeScreen.classList.add('dissolving');
+     mazeOverlay.style.opacity = '0';
+  
+     // STEP 2: Fade out
+     setTimeout(() => {
+         mazeScreen.style.opacity = '0';
+         mazeScreen.style.visibility = 'hidden';
+     }, 400);
+  
+     // STEP 3: Swap background and reveal celebration screen
+     setTimeout(() => {
+         stopFireworks();
+         container.style.backgroundImage = CELEBRATION_BACKGROUND_SRC;
+         container.style.backgroundSize = 'cover';
+         container.classList.remove('red-glow');
+         container.classList.add('congrats-glow');
+         mazeScreen.classList.remove('dissolving');
+      
+         congratulationsScreen.style.opacity = '1';
+         congratulationsScreen.style.visibility = 'visible';
+       
+         avatarCorner.style.borderColor = '#FFD700';
+         avatarCorner.style.boxShadow = '0 0 10px rgba(255, 215, 0, 0.7)';
+      
+         startFireworks();
+      
+         level2State = 0; // State 0: On Congrats Screen, waiting for button click
+     }, 950);
+ }
+     // Updated transitionToLevel2 function
+ function transitionToLevel2() {
+     stopFireworks();
+   
+     // --- STOP MUSIC FOR LEVEL 2 VIBE SHIFT ---
+     bgMusic.loop = false;
+     bgMusic.pause();
+     bgMusic.currentTime = 0;
+     // --- END MUSIC LOGIC ---
+   
+     congratulationsScreen.style.opacity = '0';
+     congratulationsScreen.style.visibility = 'hidden';
+   
+     setTimeout(() => {
+         // Instead of starting with Alex's profile, we show the Level Complete Screen
+         showLevelCompleteScreen();
+     }, 500);
+ }
+ function closePopup() {
+    // Common logic for closing the popup
+    popup.style.display = 'none';
+    popup.classList.remove('level2-correct');
+    flagIcons.forEach(icon => icon.style.pointerEvents = 'auto');
+    const yesNoButtons = document.getElementById('yes-no-buttons');
+    
+    // Check if this is the Level 1 instruction popup being closed
+    if (level2State === -1 && flagsFound.size === 0 && timeRemaining === 60) {
+        // This is the first instruction popup for Level 1 - start timer!
+        startTimer();
+    }
+
+    // Level 1 Maze Logic Check (-1: Maze finished, 0: Congrats screen)
+    if (flagsFound.size === 3 && level2State === -1) {
+        // Maze finished, ready to show congrats
+        level2State = 0; // State 0: On Congrats Screen
+        setTimeout(transitionToCongratulationsScreen, 300);
+        return;
+    }
+
+    // Level 2 Start Check (1: Instruction closed, now show buttons)
+    if (level2State === 1) {
+        // Instruction popup closed (State 1), now waiting for Alex choice
+        yesNoButtons.style.display = 'flex'; // SHOW BUTTONS
+        level2State = 5; // State 5: Alex profile loaded, waiting for user choice
+        return;
+    }
+
+    // Level 2 Alex Feedback Check (2: Alex feedback closed, transition to Jake)
+    if (level2State === 2) {
+        // Alex choice feedback closed (State 2), transition to Jake's profile
+        level2Screen.style.opacity = '0';
+        setTimeout(() => {
+            showLevel2Profile('jake', false); // This loads Jake profile (State 3) and shows buttons
+        }, 500);
+        return;
+    }
+    
+    // Level 2 Jake Feedback Check (4: Jake feedback closed, go to Level 3)
+    if (level2State === 4) {
+        // Jake choice feedback closed (State 4), go directly to Level 3
+        level2State = 6;
+        
+        // Hide Level 2 screen
+        level2Screen.style.opacity = '0';
+        level2Screen.style.visibility = 'hidden';
+        
+        // Navigate to Level 3 directly
+        setTimeout(() => {
+            window.location.href = 'INDES ASSG 2.1.html';
+        }, 500);
+        
+        return;
+    }
+} // ← IMPORTANT: This closing brace ends the function
+   
+                
+
+// --- FUNCTION TO SHOW LEVEL 2 COMPLETE SCREEN ---
+ function showLevelCompleteScreen() {
+     const level2CompleteScreen = document.getElementById('level2-complete-screen');
+    
+     // Show Level 2 to Alex
+     showLevel2Profile('alex', true);
+ }
+ // --- END NEW FUNCTION ---
+
+
+ // ... (The rest of your code continues here) ...
+
+
+ // Function to transition from Setup to Maze Screen
+ function transitionToNextScreen() {
+     const setupScreen = document.getElementById('profile-setup-screen');
+  
+     setupScreen.style.opacity = '0';
+     setupScreen.style.visibility = 'hidden';
+  
+     setTimeout(() => {
+         // 1. Swap the main background to the maze image
+         container.style.backgroundImage = "url('Level 1- Red Flag Hunt.png')";
+         container.style.backgroundSize = "cover";
+      
+         // 2. Apply Red Glow effect to the container
+         container.classList.add('red-glow');
+         container.classList.remove('congrats-glow', 'blue-glow');
+      
+         // 3. Show Maze Screen
+         mazeScreen.style.opacity = '1';
+         mazeScreen.style.visibility = 'visible';
+      
+         // 4. Update avatar corner glow to match red theme
+         avatarCorner.style.borderColor = '#FF0000';
+         avatarCorner.style.boxShadow = '0 0 10px rgba(255, 0, 0, 0.7)';
+       
+         // Set state to indicate maze completion is next step
+         level2State = -1;
+      
+         // 5. Show Instructions Pop-up (Timer starts when popup is closed)
+setTimeout(showLevelInstructions, 100);
+      
+     }, 550);
+ }
+ function showLevelInstructions() {
+    // Mark that we're showing Level 1 instructions
+    const isLevel1Instruction = true;
+    
+    showPopup(
+        "Level 1: Red Flag Hunt.(break)Find the 3 red flags hidden in the maze.(break)Click on the correct icons to learn about AI romance scam warning signs!",
+        false,
+        false,
+        true
+    );
+}
+ // Setup screen continue button
+ const setupContinueBtn = document.querySelector('#profile-setup-screen #continue-button');
+ if (setupContinueBtn) {
+     setupContinueBtn.onclick = transitionToNextScreen;
+ }
+ // Event listener for the flag icons (Level 1)
+ flagIcons.forEach(icon => {
+     icon.addEventListener('click', function(e) {
+         e.preventDefault();
+         const flagId = e.target.getAttribute('data-flag-id');
+         if (flagId) {
+             showPopup(flagId);
+         }
+     });
+ });
+</script>
+</body>
+</html>
+

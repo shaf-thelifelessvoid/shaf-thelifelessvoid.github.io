@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 3: The Chat Con</title>
+    <style>
+        /* --- 1. CUSTOM FONT LOADING --- */
+        @font-face {
+            font-family: 'RimouskiSemiBold';
+            src: url('fonts/RimouskiSemiBold.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            /* Custom cursor and trail is handled by JS/CSS */
+        }
+
+        body {
+    /* Just keep solid dark background */
+    background: #100114;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    font-family: 'RimouskiSemiBold', monospace;
+}
+    
+
+        /* --- Container and Backgrounds - FIXED WITH FLEXBOX --- */
+    #container {
+    width: 960px;
+    height: 540px;
+    background-image: url('Level 3_.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: 0 0 30px #FF69B4, 0 0 50px rgba(255, 105, 180, 0.6);
+    position: relative;
+    overflow: hidden;
+    transition: background-image 1s ease-in-out, box-shadow 1s ease-in-out;
+    z-index: 1; /* ADD THIS - ensures container is above hearts */
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0;
+}
+
+        /* --- Glow Effects (Summary Screen) --- */
+        .congrats-glow {
+            box-shadow: 0 0 40px #FF69B4, 0 0 80px rgba(255, 105, 180, 0.8), 0 0 120px rgba(255, 105, 180, 0.5) !important;
+        }
+
+        /* --- NEW MAIN CONTENT WRAPPER (The Computer Screen) --- */
+       #main-content-area {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    /* SMALLER PADDING - makes chat area smaller */
+    padding: 110px 60px 40px 60px; /* More padding = smaller chat area */
+    
+    /* COMPLETELY TRANSPARENT - no overlay */
+    background: transparent;
+    border: none; /* Remove border */
+    border-radius: 0;
+    box-shadow: none; /* Remove shadow */
+}
+
+
+        /* --- Chat Interface FIX --- */
+        #chat-container {
+            position: static;
+            width: 100%;
+            height: auto;
+            flex-grow: 1; /* Takes up all remaining vertical space inside #main-content-area */
+            overflow-y: auto;
+            /* Removed top padding, only need bottom padding for separation */
+            padding: 0 0 15px 0; 
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            transition: opacity 0.5s;
+        }
+
+        /* Hide scrollbar but keep functionality */
+        #chat-container::-webkit-scrollbar { width: 8px; }
+        #chat-container::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); border-radius: 10px; }
+        #chat-container::-webkit-scrollbar-thumb { background: rgba(255, 105, 180, 0.5); border-radius: 10px; }
+
+        /* Chat Bubbles (No changes needed here) */
+        .chat-bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+            word-wrap: break-word;
+            animation: slideIn 0.4s ease-out;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .scammer-bubble {
+    .scammer-bubble {
+    align-self: flex-start;
+    background: #FFD1E3; /* Pure white bubble */
+    color: #000;
+    border-bottom-left-radius: 4px;
+    /* NO drop shadow */
+}
+}
+        .player-bubble {
+            align-self: flex-end;
+            background: #00DDFF;
+            color: #000;
+            border-bottom-right-radius: 4px;
+        }
+
+        /* Choice Buttons Container - FIXED POSITIONING */
+        #choice-container {
+            position: static; /* Let flexbox manage the position */
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: opacity 0.5s;
+        }
+
+        .choice-button {
+            font-family: 'RimouskiSemiBold', monospace;
+            font-size: 14px;
+            padding: 14px 20px;
+            background: #00FFFF;
+            color: #100114;
+            border: 3px solid #00DDFF;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+            box-shadow: 0 4px 12px rgba(0, 255, 255, 0.3);
+            text-align: left;
+        }
+
+        .choice-button:hover {
+            background: #00DDFF;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 255, 255, 0.5);
+        }
+
+        .choice-button:active {
+            transform: translateY(0);
+        }
+
+        .choice-button.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        /* Red Flag Popup (No changes needed here) */
+        #flag-popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            max-width: 90%;
+            padding: 25px;
+            background: #1a0000;
+            border: 5px solid #FF0000;
+            box-shadow: 0 0 20px #FF0000;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        #flag-popup.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #flag-popup.instruction {
+            background: #002233;
+            border-color: #00FFFF;
+            box-shadow: 0 0 20px #00FFFF;
+        }
+
+        #flag-popup.instruction h3 {
+            color: #00FFFF;
+            text-shadow: 0 0 5px #00FFFF;
+        }
+
+        #flag-popup.instruction p {
+            color: #E0FFFF;
+        }
+
+
+        #flag-popup.correct {
+            background: #0a1a00;
+            border-color: #00FF00;
+            box-shadow: 0 0 20px #00FF00;
+        }
+
+        #flag-popup h3 {
+            color: #FF0000;
+            font-size: 24px;
+            margin-bottom: 15px;
+            text-shadow: 0 0 5px #FF0000;
+        }
+
+        #flag-popup.correct h3 {
+            color: #00FF00;
+            text-shadow: 0 0 5px #00FF00;
+        }
+
+        #flag-popup p {
+            color: #FFD700;
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            white-space: pre-line; /* Allows \n to work for line breaks */
+        }
+
+        #close-popup {
+            font-family: 'RimouskiSemiBold', monospace;
+            padding: 10px 30px;
+            background: #FF0000;
+            color: #fff;
+            border: 2px solid #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.2s;
+        }
+
+        #close-popup:hover {
+            background: #cc0000;
+        }
+
+        #flag-popup.correct #close-popup {
+            background: #00FF00;
+            color: #000;
+        }
+
+        #flag-popup.correct #close-popup:hover {
+            background: #00CC00;
+        }
+
+        #flag-popup.instruction #close-popup {
+            background: #00FFFF;
+            color: #000;
+        }
+
+        #score-display {
+    position: absolute;
+    top: 85px; /* Moved down to align with grey area */
+    right: 25px; /* Slightly more inset */
+    font-size: 18px;
+    color: #ff0000;
+    text-shadow: 0 0 5px #FF69B4;
+    z-index: 20;
+}
+
+        /* Avatar corner (Kept absolute, position adjusted for 15px container padding) */
+        #profile-avatar {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid #FF69B4;
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.7);
+            background: #22022b;
+            overflow: hidden;
+            z-index: 20; /* Ensure it stays above #main-content-area */
+        }
+
+        #profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* --- CURSOR HEART TRAIL / HEART RAINFALL --- */
+        /* Heart Rain Container (Background) */
+       .heart-rain-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: -1; /* NEGATIVE z-index puts it BEHIND everything */
+}
+        
+        .heart {
+            position: absolute;
+            user-select: none;
+            opacity: 0;
+            animation: rain-of-hearts 8s linear infinite;
+        }
+
+        .heart img {
+            width: 40px;
+            height: auto;
+            image-rendering: pixelated;
+            display: block;
+        }
+
+        /* Keyframes for falling hearts */
+        @keyframes rain-of-hearts {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Heart Cursor Trail (Unicode) */
+        .heart-trail {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+            pointer-events: none;
+            color: #fb5ea6;
+            font-size: 30px;
+            line-height: 1;
+            font-family: monospace;
+            text-shadow: 0 0 5px #ff69b4;
+            animation: fadeOutAndFloat 1s ease-out forwards;
+        }
+
+        @keyframes fadeOutAndFloat {
+            0% { opacity: 1; transform: translate(0, 0) scale(1); }
+            100% { opacity: 0; transform: translate(0, -20px) scale(0.5); }
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+        } 
+        /* --- FINAL SUMMARY SCREEN STYLES --- */
+        #final-summary-screen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #fff;
+            z-index: 50;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1s, visibility 1s;
+            padding: 50px;
+        }
+        
+        #summary-content {
+            background: rgba(16, 1, 20, 0.85); /* Dark background for text readability */
+            padding: 30px 40px;
+            border-radius: 15px;
+            border: 3px solid #00FFFF;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            max-width: 80%;
+            height: 90%;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: left;
+        }
+        
+        #summary-content h2 {
+            font-size: 30px;
+            color: #FFD700;
+            text-shadow: 0 0 10px #FF69B4;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #typing-text-wrapper {
+            width: 100%;
+            min-height: 250px; /* Give room for the text */
+        }
+
+        #typed-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #00FFFF;
+            white-space: pre-wrap; /* Allows \n and word wrapping */
+            display: inline-block;
+        }
+
+        /* TYPING ANIMATION STYLES */
+        .typing-cursor {
+            border-right: 2px solid #FFD700;
+            animation: blink-caret 0.75s step-end infinite;
+            margin-left: 2px;
+            height: 1.2em;
+            display: inline-block;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #FFD700 }
+        }
+        /* END TYPING ANIMATION STYLES */
+
+
+        /* MODIFIED BUTTON STYLE TO MATCH CHOICE BUTTONS */
+        #next-screen-button {
+            font-family: 'RimouskiSemiBold', monospace;
+            font-size: 16px; /* Slightly larger than chat buttons for prominence */
+            padding: 14px 40px;
+            margin-top: 30px;
+            background: #00FFFF;
+            color: #100114;
+            border: 3px solid #00DDFF;
+            border-radius: 12px; /* Matching choice button radius */
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+            box-shadow: 0 4px 12px rgba(0, 255, 255, 0.5);
+            display: none; /* Hidden until typing is complete */
+            text-align: center;
+            width: auto; /* Allow button to size naturally */
+        }
+
+        #next-screen-button:hover {
+            background: #00DDFF;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 255, 255, 0.7);
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+
+
+    </style>
+</head>
+<body>
+    <audio id="correct-sound" src="game-bonus-02-294436.mp3" preload="auto"></audio>
+    <audio id="wrong-sound" src="wrong-answer-126515.mp3" preload="auto"></audio>
+    
+    <!-- ADD THESE TWO LINES -->
+    <div class="heart-rain-container" id="heartRain"></div>
+    <div id="container">
+
+        <div id="profile-avatar">
+            <img src="Alex Image_.png" alt="Scammer Avatar" id="avatar-img"> </div>
+
+        <div id="score-display">Red Flags Spotted: <span id="score">0</span>/4</div>
+        <div id="main-content-area">
+            <div id="chat-container"></div>
+            <div id="choice-container"></div>
+        </div>
+        
+        <div id="flag-popup">
+            <h3 id="popup-title">Red Flag</h3>
+            <p id="popup-text">Description</p>
+            <button id="close-popup">ACKNOWLEDGE</button>
+        </div>
+
+        <div id="final-summary-screen">
+            <div id="summary-content">
+                <h2 id="final-summary-title"></h2>
+                <div id="typing-text-wrapper">
+                    <span id="typed-text"></span>
+                    <span class="typing-cursor"></span>
+                </div>
+                <button id="next-screen-button">PLAY AGAIN</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function initGame() {
+            // --- DOM Element Access ---
+            const container = document.getElementById('container');
+            const correctSound = document.getElementById('correct-sound');
+            const wrongSound = document.getElementById('wrong-sound');
+            const chatContainer = document.getElementById('chat-container');
+            const choiceContainer = document.getElementById('choice-container');
+            const flagPopup = document.getElementById('flag-popup');
+            const popupTitle = document.getElementById('popup-title');
+            const popupText = document.getElementById('popup-text');
+            const closePopupBtn = document.getElementById('close-popup');
+            const scoreDisplay = document.getElementById('score');
+            const profileAvatar = document.getElementById('profile-avatar');
+            const scoreDisplayElement = scoreDisplay.parentElement;
+            
+            // NEW SUMMARY ELEMENTS
+            const finalSummaryScreen = document.getElementById('final-summary-screen');
+            const finalSummaryTitle = document.getElementById('final-summary-title');
+            const typedTextElement = document.getElementById('typed-text');
+            const nextScreenButton = document.getElementById('next-screen-button');
+
+
+            // --- Global State (Now scoped to initGame) ---
+            let currentStage = 0;
+            let score = 0;
+            let isProcessingChoice = false; // Prevents pop-up overlap
+
+            // --- Asset Constants ---
+            const GALAXY_BACKGROUND_SRC = 'Galaxy BG.jpg'; // ASSUMED FILE NAME
+
+            // --- RECAP TEXT (SHORTENED) ---
+            const RECAP_TEXT = 
+                "Congrats, you made it to the end! Here is a recap of how to spot fake AI profiles:\n\n" +
+                "1. Visual Flaws\n" +
+                "2. Suspicious Image Origin\n" +
+                "3. Vague or Generic Details\n" +
+                "4. Overseas/Unavailable\n" +
+                "5. Avoids Live Calls\n" +
+                "6. Love Bombing\n" +
+                "7. The Financial Hook";
+            // --------------------
+
+
+            const stages = [
+                {
+                    scammerMessages: [
+                        "Hey gorgeous, so glad you matched with me!",
+                        "Wow, I feel such an immediate and deep connection with you. It feels like fate brought us together. I can already see a beautiful future for us."
+                    ],
+                    choices: [
+                        { text: "Woah, not so fast! Let's slow down.", correct: true, points: 1 },
+                        { text: "OMG! I feel it too Jake! Let's get married! 💍", correct: false, points: 0 },
+                        { text: "Aww, that's sweet. Tell me more about yourself.", correct: false, points: 0 } // Decoy
+                    ],
+                    redFlag: {
+                        title: "🚩 RED FLAG 1: LOVE BOMBING",
+                        description: "Expressing deep love, devotion, and talk of a future together within days or weeks of starting the conversation."
+                    }
+                },
+                {
+                    scammerMessages: [
+                        "It feels natural! By the way, I'm currently an engineer on an oil rig overseas. I only have limited satellite access, but I promise I'll check in whenever I can."
+                    ],
+                    choices: [
+                        { text: "Hmmm, maybe we should meet up in person soon?", correct: true, points: 1 },
+                        { text: "Wow, that's exciting work! Be safe.", correct: false, points: 0 },
+                        { text: "Oh, that's tough! Don't worry, I'll wait for you.", correct: false, points: 0 } // Decoy
+                    ],
+                    redFlag: {
+                        title: "🚩 RED FLAG 2: OVERSEAS/UNAVAILABLE",
+                        description: "They claim to be local, but are always traveling, overseas, or working in a remote/secret location (eg, oil rig or military service) that prevents them from meeting or calling."
+                    }
+                },
+                {
+                    scammerMessages: [
+                        "I wish I could meet you! But my camera is broken, and the satellite signal is too weak for live video. It's a security protocol, my darling. Here, enjoy this quick pre-recorded clip I made for you."
+                    ],
+                    choices: [
+                        { text: "I only trust live verification. This is suspicious.", correct: true, points: 1 },
+                        { text: "Aww, thanks for the video! It's so sweet. You look handsome!", correct: false, points: 0 }, // Decoy
+                        { text: "No worries! Audio is fine if you'd prefer that.", correct: false, points: 0 }
+                    ],
+                    redFlag: {
+                        title: "🚩 RED FLAG 3: AVOIDS LIVE CALLS",
+                        description: "They consistently refuse requests for a live phone call or video chat, only sending pre-recorded videos that may be deepfakes or stolen. They use excuses like \"poor signal,\" \"broken camera,\" or \"security protocols.\""
+                    }
+                },
+                {
+                    scammerMessages: [
+                        "Hi sweetheart, I have a massive problem. My equipment broke, and I need a part shipped immediately. I need $3,000 via Bitcoin or Amazon gift cards to fix it so I can come home to you!"
+                    ],
+                    choices: [
+                        { text: "I don't send money to strangers. END CHAT.", correct: true, points: 1 },
+                        { text: "Oh no! Which kind of gift card should I get?", correct: false, points: 0 },
+                        { text: "Wait, why not a bank transfer? I don't use Bitcoin.", correct: false, points: 0 } // Decoy
+                    ],
+                    redFlag: {
+                        title: "🚩 RED FLAG 4: THE FINANCIAL HOOK",
+                        description: "They quickly move to a sudden, urgent request for money. They demand payment via untraceable methods like cryptocurrency or gift cards."
+                    },
+                    isFinal: true
+                }
+            ];
+
+            /**
+             * Helper function to show the popup for instructions or red flags.
+             */
+            function showPopup(title, message, isCorrect, closeText, isInstruction = false) {
+                // Reset classes
+                flagPopup.className = '';
+                flagPopup.classList.add('visible');
+
+                if (isCorrect) {
+                    flagPopup.classList.add('correct');
+                }
+                if (isInstruction) {
+                    flagPopup.classList.add('instruction');
+                }
+
+                popupTitle.textContent = title;
+                popupText.textContent = message;
+                closePopupBtn.textContent = closeText;
+
+                // Ensure the popup is visible
+                flagPopup.style.display = 'block';
+            }
+
+            // Hiding the popup
+            function hidePopup() {
+                flagPopup.classList.remove('visible');
+                setTimeout(() => {
+                    flagPopup.style.display = 'none';
+                }, 300); // Match transition time
+            }
+
+            function addChatBubble(message, isScammer = true) {
+                const bubble = document.createElement('div');
+                bubble.className = `chat-bubble ${isScammer ? 'scammer-bubble' : 'player-bubble'}`;
+                bubble.textContent = message;
+                chatContainer.appendChild(bubble);
+
+                // Auto-scroll to bottom
+                setTimeout(() => {
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }, 100);
+            }
+
+            function showChoices(choices) {
+                choiceContainer.innerHTML = '';
+
+                choices.forEach((choice, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'choice-button';
+                    btn.textContent = choice.text;
+                    btn.onclick = () => handleChoice(index);
+                    choiceContainer.appendChild(btn);
+                });
+            }
+
+            function handleChoice(choiceIndex) {
+                if (isProcessingChoice) return;
+                isProcessingChoice = true;
+
+                const stage = stages[currentStage];
+                const chosenOption = stage.choices[choiceIndex];
+
+                // Disable all buttons immediately
+                document.querySelectorAll('.choice-button').forEach(btn => {
+                    btn.classList.add('disabled');
+                });
+
+                // Add player's choice to chat
+                addChatBubble(chosenOption.text, false);
+
+                // Play sound and update score
+                if (chosenOption.correct) {
+                    correctSound.currentTime = 0;
+                    correctSound.play();
+                    score += chosenOption.points;
+                    scoreDisplay.textContent = score;
+                } else {
+                    wrongSound.currentTime = 0;
+                    wrongSound.play();
+                }
+
+                // Show red flag popup after brief delay
+                setTimeout(() => {
+                    // Pass chosenOption.correct as the isCorrect argument to showRedFlagPopup
+                    showRedFlagPopup(stage.redFlag, chosenOption.correct, stage.isFinal);
+                }, 800);
+            }
+
+            function showRedFlagPopup(redFlag, isCorrect, isFinal) {
+                const closeText = isFinal && isCorrect ? 'See Summary' : 'Continue Chat';
+
+                showPopup(
+                    isCorrect ? '✅ Correct! Red Flag Spotted.' : redFlag.title,
+                    redFlag.description,
+                    isCorrect,
+                    closeText
+                );
+
+                // Set the action for when the user closes the popup
+                closePopupBtn.onclick = () => {
+                    // Start the 300ms fade-out of the current pop-up
+                    hidePopup();
+                    isProcessingChoice = false; // Unlock for the next action
+
+                    if (isFinal) {
+                        // NEW LOGIC: Wait 300ms for the current pop-up to fully hide 
+                        // before starting the screen transition.
+                        if (isCorrect) {
+                            // Correct choice on final stage: Win
+                            setTimeout(() => transitionToSummary(false), 300); 
+                        } else {
+                            // Incorrect choice on final stage: Lose/Scam Failed
+                            setTimeout(() => transitionToSummary(true), 300); 
+                        }
+                    } else {
+                        currentStage++;
+                        loadStage(currentStage);
+                    }
+                };
+            }
+
+            function loadStage(stageIndex) {
+                if (stageIndex >= stages.length) {
+                    console.error("Attempted to load stage beyond bounds.");
+                    return;
+                }
+
+                const stage = stages[stageIndex];
+
+                // Clear choices
+                choiceContainer.innerHTML = '';
+
+                // Add scammer messages with delays
+                stage.scammerMessages.forEach((msg, index) => {
+                    setTimeout(() => {
+                        addChatBubble(msg, true);
+
+                        // Show choices after last message
+                        if (index === stage.scammerMessages.length - 1) {
+                            setTimeout(() => {
+                                showChoices(stage.choices);
+                            }, 500);
+                        }
+                    }, index * 1000);
+                });
+            }
+
+            /**
+             * Shows the initial instruction screen.
+             */
+            function showInstructionScreen() {
+                const title = "Welcome to The Chat Con";
+                const message = "Ooohhh...You just matched with 'Jake'! Is he the love of your life or the bane of your existence?\n\nChat with him to learn about the red flags to look out for when online dating!\n\nSelecting a response to trigger the Red Flags.\n\nRemember, always listen to your gut!";
+
+                showPopup(title, message, false, 'Begin Chat', true);
+
+                // Set the close button to start the chat flow
+                closePopupBtn.onclick = () => {
+                    hidePopup();
+                    loadStage(currentStage); // Starts with step 0
+                };
+            }
+
+            /**
+             * Handles the typing animation for the summary text.
+             */
+            function typeRecapText(text, element) {
+                const words = text.split(/(\s+|(?<=\n))/g).filter(s => s.length > 0); // Split by space and also keep newlines
+                let i = 0;
+                
+                function typeWord() {
+                    if (i < words.length) {
+                        element.textContent += words[i];
+                        i++;
+                        // Use a faster delay for regular text, and a longer delay after a newline
+                        let delay = words[i-1].includes('\n') ? 200 : 30; 
+                        setTimeout(typeWord, delay);
+                    } else {
+                        // Typing complete: hide cursor and show button
+                        document.querySelector('.typing-cursor').style.display = 'none';
+                        nextScreenButton.style.display = 'block';
+                    }
+                }
+                typeWord();
+            }
+
+            /**
+             * Transitions to the final summary screen.
+             * @param {boolean} isLoss - True if the game ended in a loss (fell for the final scam).
+             */
+            function transitionToSummary(isLoss = false) {
+                // 1. Hide chat elements and avatar
+                document.getElementById('main-content-area').style.opacity = 0;
+                profileAvatar.style.opacity = 0;
+                scoreDisplayElement.style.opacity = 0;
+                
+                // 2. Change background to Galaxy BG
+                container.style.backgroundImage = `url('${GALAXY_BACKGROUND_SRC}')`;
+                
+                let summaryTitle;
+
+                if (isLoss) {
+                    summaryTitle = `SCAM FAILED! Final Score: ${score}/4`;
+                    // Change container glow to red for loss
+                    container.classList.remove('congrats-glow');
+                    container.style.boxShadow = '0 0 30px #FF0000, 0 0 50px rgba(255, 0, 0, 0.6)';
+                } else {
+                    summaryTitle = `✅ MISSION ACCOMPLISHED! Final Score: ${score}/4`;
+                    // Apply win glow (pink/blue)
+                    container.classList.add('congrats-glow');
+                    container.style.boxShadow = '0 0 30px #FF69B4, 0 0 50px rgba(255, 105, 180, 0.6)';
+                }
+                
+                finalSummaryTitle.textContent = summaryTitle;
+
+
+                setTimeout(() => {
+                    // 3. Show the new summary screen and start typing
+                    finalSummaryScreen.style.opacity = 1;
+                    finalSummaryScreen.style.visibility = 'visible';
+                    // Reset typed text before starting the animation
+                    typedTextElement.textContent = ''; 
+                    typeRecapText(RECAP_TEXT, typedTextElement);
+
+                   // 4. Set the action for the Next Screen button
+                    nextScreenButton.onclick = () => {
+                        // Navigate to the start of INDES ASSG 2.html
+                        window.location.href = 'INDES ASSG 2.html';
+                    }; 
+
+                }, 1000); // Give time for the chat area and background transition to complete
+            }
+
+            // --- PARTICLE EFFECTS: Heart Cursor Trail & Rainfall ---
+
+           // --- RAINING HEARTS GENERATION & CURSOR TRAIL LOGIC ---
+            const heartRainContainer = document.getElementById('heartRain');
+            const HEART_IMAGE_SRC = 'Heart Background_.png'; // Use the same heart image as file 2
+
+            function createHeart() {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                
+                const heartImg = document.createElement('img');
+                heartImg.src = HEART_IMAGE_SRC;
+                heartImg.alt = 'Pixel Heart';
+                heart.appendChild(heartImg);
+                
+                const left = Math.random() * window.innerWidth;
+                heart.style.left = left + 'px';
+                
+                const duration = Math.random() * 6 + 4;
+                const delay = Math.random() * 4;
+                
+                heart.style.animationDuration = duration + 's';
+                heart.style.animationDelay = delay + 's';
+                
+                heartRainContainer.appendChild(heart);
+                
+                setTimeout(() => {
+                    heart.remove();
+                }, duration * 1000);
+            }
+
+            function startRainingHearts() {
+                if (HEART_IMAGE_SRC.includes('.png')) {
+                    for (let i = 0; i < 50; i++) {
+                        createHeart();
+                    }
+                    setInterval(createHeart, 300);
+                }
+            }
+
+            // Cursor Trail (Unicode Heart)
+            document.addEventListener('mousemove', function(e) {
+                const heart = document.createElement('span');
+                heart.classList.add('heart-trail');
+                heart.innerHTML = '♥'; // Unicode heart
+                heart.style.left = e.clientX + 'px';
+                heart.style.top = e.clientY + 'px';
+                document.body.appendChild(heart);
+                setTimeout(() => { heart.remove(); }, 1000);
+            });
+
+            // Start the game flow and rain effects
+            startRainingHearts();
+            showInstructionScreen();
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
